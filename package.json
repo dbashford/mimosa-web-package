@@ -1,0 +1,34 @@
+{
+  "name": "mimosa-web-package",
+  "preferGlobal": "false",
+  "version": "0.0.1",
+  "homepage": "http://www.mimosajs.com",
+  "author": "David Bashford",
+  "description": "Web App Packaging Module for Mimosa",
+  "contributors": [
+    {
+      "name": "David Bashford",
+      "email": "dbashford@hotmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbashford/mimosa-web-package"
+  },
+  "keywords": [
+    "mimosa",
+    "mmodule",
+    "express",
+    "package",
+    "packaging"
+  ],
+  "dependencies": {
+    "logmimosa": "0.2.0",
+    "rimraf": "2.0.2",
+    "lodash": "0.9.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8"
+  }
+}
