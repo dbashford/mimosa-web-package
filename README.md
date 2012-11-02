@@ -1,7 +1,7 @@
 mimosa-web-package
 ===========
 
-This is a Mimosa web packaging module. It assumes that the mimosa-server module is also being used.
+This is a Mimosa module for packaging web applications. It assumes that the mimosa-server module is also being used.
 
 * For more information regarding Mimosa, see http://mimosajs.com
 * For information regarding packaging in Mimosa, see http://mimosajs.com/commands.html#package
