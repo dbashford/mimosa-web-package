@@ -4,6 +4,7 @@ path = require 'path'
 
 exports.defaults = ->
   webPackage:
+    archiveName: "app"
     outPath: "dist"
     configName: "config"
     exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git"]
@@ -16,6 +17,11 @@ exports.placeholder = ->
     web applications
     ###
     # webPackage:                   # Configration for packaging of web applications
+      # archiveName: "app"          # If the default is changed away from `app`, the changed config
+                                    # setting will be used.  If the default is left alone, web-package
+                                    # will check the for a `name` property in the package.json, and if
+                                    # it exists, it will be used.   If the default is left as `app`,
+                                    # and there is no package.json.name property, the default is used.
       # outPath:"dist"              # Output path for assets to package
       # configName:"config"         # the name of the config file, will be placed in outPath and have
                                     # a .json extension
@@ -39,6 +45,10 @@ exports.validate = (config) ->
       if config.webPackage.configName?
         unless typeof config.webPackage.configName is "string"
           errors.push "webPackage.configName must be a string."
+
+      if config.webPackage.archiveName?
+        unless typeof config.webPackage.archiveName is "string"
+          errors.push "webPackage.archiveName must be a string."
 
       if config.webPackage.exclude?
         if Array.isArray(config.webPackage.exclude)

@@ -8,7 +8,7 @@ rimraf = require 'rimraf'
 logger = require 'logmimosa'
 _ = require 'lodash'
 
-config = require './config'
+moduleConfig = require './config'
 
 langs =
   coffee:"coffee-script"
@@ -56,13 +56,23 @@ _package = (config, options, next) ->
       done()
     else
       logger.debug "Zip contents of [[ #{config.webPackage.outPath} ]]"
-      outputTarFile = path.join config.root, 'app.tar.gz'
+      tarballName = config.webPackage.archiveName
+      # if didn't change default, look for package.json name
+      if tarballName is moduleConfig.defaults().webPackage.archiveName
+        try
+          pack = require(path.join config.root, 'package.json')
+          tarballName = pack.name if pack.name?
+        catch err
+          logger.debug "No package.json"
+
+      tarballName = "#{tarballName}.tar.gz"
+      outputTarFile = path.join config.root, tarballName
       tarCommand = "tar -czf #{outputTarFile} ."
       exec tarCommand, (err, sout, serr) =>
         if err
           logger.info "Failed to 'tar' file using command: #{tarCommand}"
         else
-          fs.renameSync outputTarFile, path.join config.webPackage.outPath, 'app.tar.gz'
+          fs.renameSync outputTarFile, path.join config.webPackage.outPath, tarballName
 
         done()
 
@@ -135,6 +145,6 @@ copyDirSyncRecursive = (sourceDir, newDirLocation, excludes) ->
 
 module.exports =
   registration: registration
-  defaults:     config.defaults
-  placeholder:  config.placeholder
-  validate:     config.validate
+  defaults:     moduleConfig.defaults
+  placeholder:  moduleConfig.placeholder
+  validate:     moduleConfig.validate

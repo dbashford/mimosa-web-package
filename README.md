@@ -25,13 +25,19 @@ At that step mimosa-web-package will:
 
 What you get as a result is an application that runs without Mimosa's aid by simply executing `node app.js`, as well as an archive file (.tar.gz) of the codebase.
 
+If `tar` isn't available as a command line utility on your system, no tar file will be created.
+
 ## Default Config
 
 ```
 webPackage:
+  archiveName: "app"
+  configName: "config"
   outPath: "dist"
   exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js"]
 ```
 
+* `archiveName`: a string, the name of the output `.tar.gz` file.  Ex: app.tar.gz. If the default is changed away from `app`, web-package will use the changed config setting.  If the default is left alone, web-package will check the for a `name` property in the package.json, and if it exists, it will be used. If the default is left as `app`, and there is no package.json.name property, the default is used.
+* `configName`: a string, the name of output configuration file. The relevant portions of the `mimosa-config` are written to the `outPath` directory as `configName + '.json'`
 * `outPath`: a string, the location, relative to the root of your application, where mimosa-web-package will place your packaged app
 * `exclude`: an array, files, relative to the root of the application, to not include in the package.  If it isn't listed in this array, it will be included in the package.
