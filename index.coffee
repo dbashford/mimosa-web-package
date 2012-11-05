@@ -81,6 +81,8 @@ writeConfig = (config) ->
   writeConfig =
     server: configClone.server
     watch: configClone.watch
+    liveReload:
+      enabled:false
     isOptimize: configClone.isOptimize
   writeConfig.server.path = writeConfig.server.path.replace config.root, '.'
   writeConfig.server.views.path = writeConfig.server.views.path.replace config.root, '.'
