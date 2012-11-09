@@ -12,6 +12,7 @@ exports.defaults = ->
 exports.placeholder = ->
   """
   \t
+
     ###
     The webPackage module works hand in hand with the mimosa-server module to package web
     applications
