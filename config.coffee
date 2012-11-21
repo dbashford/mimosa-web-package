@@ -2,6 +2,8 @@
 
 path = require 'path'
 
+windowsDrive = /^[A-Za-z]:\\/
+
 exports.defaults = ->
   webPackage:
     archiveName: "app"
@@ -24,7 +26,8 @@ exports.placeholder = ->
                                   # package.json, and if it exists, it will be used.   If the
                                   # default is left as `app`, and there is no package.json.name
                                   # property, the default is used.
-      # outPath:"dist"            # Output path for assets to package
+      # outPath:"dist"            # Output path for assets to package, should be relative to the
+                                  # root of the project (location of mimosa-config) or be absolute
       # configName:"config"       # the name of the config file, will be placed in outPath and have
                                   # a .json extension
       ###
@@ -40,7 +43,7 @@ exports.validate = (config) ->
     if typeof config.webPackage is "object" and not Array.isArray(config.webPackage)
       if config.webPackage.outPath?
         if typeof config.webPackage.outPath is "string"
-          config.webPackage.outPath = path.join config.root, config.webPackage.outPath
+          config.webPackage.outPath = __determinePath config.webPackage.outPath, config.root
         else
           errors.push "webPackage.outPath must be a string."
 
@@ -70,3 +73,9 @@ exports.validate = (config) ->
       errors.push "webPackage configuration must be an object."
 
   errors
+
+
+__determinePath = (thePath, relativeTo) ->
+  return thePath if windowsDrive.test thePath
+  return thePath if thePath.indexOf("/") is 0
+  path.join relativeTo, thePath
