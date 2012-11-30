@@ -10,6 +10,8 @@ This is a Mimosa module for packaging web applications. It assumes that the mimo
 
 Add `web-package` as a string to your list of `modules` in the `mimosa-config`.  When Mimosa starts up, it will install the module for you.
 
+* 0.3.0 Works with Mimosa 0.6.2+
+
 ## Functionality
 
 If the `isPackage` flag is set (if you are running `mimosa build` with the `--package` flag), mimosa-web-package attaches itself to Mimosa's `postBuild' workflow as part of the `package` step.
