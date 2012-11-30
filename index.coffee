@@ -18,7 +18,7 @@ langs =
 
 registration = (config, register) ->
   if config.isPackage
-    register ['buildDone'], 'package',  _package
+    register ['postBuild'], 'package',  _package
 
 _package = (config, options, next) ->
   logger.info "Beginning web-package"
