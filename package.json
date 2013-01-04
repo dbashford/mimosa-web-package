@@ -1,7 +1,7 @@
 {
   "name": "mimosa-web-package",
   "preferGlobal": "false",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "Web App Packaging Module for Mimosa",
@@ -23,9 +23,9 @@
     "packaging"
   ],
   "dependencies": {
-    "logmimosa": "0.2.1",
-    "rimraf": "2.0.2",
-    "lodash": "0.9.1"
+    "logmimosa": "0.3.0",
+    "rimraf": "2.1.1",
+    "lodash": "1.0.0-rc.3"
   },
   "license": "MIT",
   "engines": {
