@@ -52,7 +52,7 @@ _package = (config, options, next) ->
       next()
 
     if err
-      logger.error err
+      logger.error "Error running NPM Install: #{err}"
       done()
     else
       logger.debug "Zip contents of [[ #{config.webPackage.outPath} ]]"
