@@ -2,8 +2,6 @@
 
 path = require 'path'
 
-windowsDrive = /^[A-Za-z]:\\/
-
 exports.defaults = ->
   webPackage:
     archiveName: "app"
@@ -37,45 +35,28 @@ exports.placeholder = ->
       # exclude:["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git"]
   """
 
-exports.validate = (config) ->
+exports.validate = (config, validators) ->
   errors = []
-  if config.webPackage?
-    if typeof config.webPackage is "object" and not Array.isArray(config.webPackage)
-      if config.webPackage.outPath?
-        if typeof config.webPackage.outPath is "string"
-          config.webPackage.outPath = __determinePath config.webPackage.outPath, config.root
+  if validators.ifExistsIsObject(errors, "webPackage config", config.webPackage)
+
+    if config.webPackage.outPath?
+      if typeof config.webPackage.outPath is "string"
+        config.webPackage.outPath = validators.determinePath config.webPackage.outPath, config.root
+      else
+        errors.push "webPackage.outPath must be a string."
+
+    validators.ifExistsIsString(errors, "webPackage.configName", config.webPackage.configName)
+    validators.ifExistsIsString(errors, "webPackage.archiveName", config.webPackage.archiveName)
+
+    if validators.ifExistsIsArray(errors, "webPackage.exclude", config.webPackage.exclude)
+      fullPathExcludes = []
+      for ex in config.webPackage.exclude
+        if typeof ex is "string"
+          fullPathExcludes.push path.join config.root, ex
         else
-          errors.push "webPackage.outPath must be a string."
-
-      if config.webPackage.configName?
-        unless typeof config.webPackage.configName is "string"
-          errors.push "webPackage.configName must be a string."
-
-      if config.webPackage.archiveName?
-        unless typeof config.webPackage.archiveName is "string"
-          errors.push "webPackage.archiveName must be a string."
-
-      if config.webPackage.exclude?
-        if Array.isArray(config.webPackage.exclude)
-          fullPathExcludes = []
-          for ex in config.webPackage.exclude
-            if typeof ex is "string"
-              fullPathExcludes.push path.join config.root, ex
-            else
-              errors.push "webPackage.exclude must be an array of strings"
-              break
-          config.webPackage.exclude = fullPathExcludes
-          config.webPackage.exclude.push config.webPackage.outPath
-        else
-          errors.push "webPackage.exclude must be an array."
-
-    else
-      errors.push "webPackage configuration must be an object."
+          errors.push "webPackage.exclude must be an array of strings"
+          break
+      config.webPackage.exclude = fullPathExcludes
+      config.webPackage.exclude.push config.webPackage.outPath
 
   errors
-
-
-__determinePath = (thePath, relativeTo) ->
-  return thePath if windowsDrive.test thePath
-  return thePath if thePath.indexOf("/") is 0
-  path.join relativeTo, thePath
