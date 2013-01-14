@@ -79,13 +79,15 @@ _package = (config, options, next) ->
 writeConfig = (config) ->
   configClone = _.clone(config, true)
   writeConfig =
-    server: configClone.server
     watch: configClone.watch
     liveReload:
       enabled:false
     isOptimize: configClone.isOptimize
-  writeConfig.server.path = writeConfig.server.path.replace config.root, '.'
-  writeConfig.server.views.path = writeConfig.server.views.path.replace config.root, '.'
+
+  if configClone.server
+    writeConfig.server = configClone.server
+    writeConfig.server.path = writeConfig.server.path.replace config.root, '.'
+    writeConfig.server.views.path = writeConfig.server.views.path.replace config.root, '.'
   writeConfig.watch.sourceDir = writeConfig.watch.sourceDir.replace config.root, '.'
   writeConfig.watch.compiledDir = writeConfig.watch.compiledDir.replace config.root, '.'
   writeConfig.watch.compiledJavascriptDir = writeConfig.watch.compiledJavascriptDir.replace config.root, '.'
