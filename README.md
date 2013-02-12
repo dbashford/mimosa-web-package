@@ -10,8 +10,6 @@ This is a Mimosa module for packaging web applications. It assumes that the mimo
 
 Add `web-package` as a string to your list of `modules` in the `mimosa-config`.  When Mimosa starts up, it will install the module for you.
 
-* 0.3.0 Works with Mimosa 0.6.2+
-
 ## Functionality
 
 If the `isPackage` flag is set (if you are running `mimosa build` with the `--package` flag), mimosa-web-package attaches itself to Mimosa's `postBuild' workflow as part of the `package` step.
@@ -20,6 +18,7 @@ At that step mimosa-web-package will:
 
 * Remove the directory at `webPackage.outPath` if it already exists
 * Copy your entire project to the `webPackage.outPath` folder, omitting anything you have listed in `webPackage.exclude`
+* Re-write the package.json to not include any mimosa packages in the `package.json` `depedencies` array.
 * Write the parts of the fully-resolved and blown out `mimosa-config` that pertain to the server to the `webPackage.outPath` as `config.json`.  Will set some config values, like live reload to production level settings.  Will also turn normally absolute `mimosa-config` paths relative.
 * Write a simple `app.js` file to `webPackage.outPath`.  `app.js` exists to be a starting point for your app when Mimosa is not available to invoke your server.  It simply reads the config, and calls your server.startServer method passing the config.
 * runs NPM install from inside the `webpackage.outPath`

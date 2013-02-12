@@ -137,15 +137,25 @@ copyDirSyncRecursive = (sourceDir, newDirLocation, excludes) ->
     return if excludes.indexOf(filePath) >= 0
 
     newFilePath = path.join newDirLocation, f
-    currFile = fs.lstatSync(filePath);
+    currFile = fs.lstatSync filePath
     if currFile.isDirectory()
-      copyDirSyncRecursive(filePath, newFilePath, excludes);
+      copyDirSyncRecursive filePath, newFilePath, excludes
     else if currFile.isSymbolicLink()
-      symlinkFull = fs.readlinkSync(filePath);
-      fs.symlinkSync(symlinkFull, newFilePath);
+      symlinkFull = fs.readlinkSync filePath
+      fs.symlinkSync symlinkFull, newFilePath
     else
-      contents = fs.readFileSync(filePath);
-      fs.writeFileSync(newFilePath, contents);
+      contents = fs.readFileSync filePath
+      if f is "package.json"
+        try
+          packageJson = require filePath
+          _.keys(packageJson.dependencies).forEach (key) ->
+            if key.indexOf('mimosa-') is 0
+              delete packageJson.dependencies[key]
+          contents = JSON.stringify packageJson, null, 2
+        catch err
+          logger.error "Error parsing package.json: #{err}"
+
+      fs.writeFileSync newFilePath, contents
 
 module.exports =
   registration: registration
