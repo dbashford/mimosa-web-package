@@ -12,7 +12,7 @@ Add `web-package` as a string to your list of `modules` in the `mimosa-config`. 
 
 ## Functionality
 
-If the `isPackage` flag is set (if you are running `mimosa build` with the `--package` flag), mimosa-web-package attaches itself to Mimosa's `postBuild' workflow as part of the `package` step.
+If the `isPackage` flag is set (if you are running `mimosa build` with the `--package` flag), mimosa-web-package attaches itself to Mimosa's `postBuild` workflow as part of the `package` step.
 
 At that step mimosa-web-package will:
 
