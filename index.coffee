@@ -7,6 +7,7 @@ fs = require 'fs'
 rimraf = require 'rimraf'
 logger = require 'logmimosa'
 _ = require 'lodash'
+hogan = require 'hogan.js'
 
 moduleConfig = require './config'
 
@@ -91,9 +92,17 @@ writeConfig = (config) ->
   writeConfig.watch.sourceDir = path.relative config.root, writeConfig.watch.sourceDir
   writeConfig.watch.compiledDir = path.relative config.root, writeConfig.watch.compiledDir
   writeConfig.watch.compiledJavascriptDir = path.relative config.root, writeConfig.watch.compiledJavascriptDir
-  configOutPath = path.join config.webPackage.outPath, "#{config.webPackage.configName}.json"
+  configOutPath = path.join config.webPackage.outPath, "#{config.webPackage.configName}.js"
   logger.debug "Writing mimosa-config to [[ #{configOutPath} ]]"
-  fs.writeFileSync configOutPath, JSON.stringify(writeConfig, null, 2), 'ascii'
+  configText = generateConfigText(writeConfig)
+  fs.writeFileSync configOutPath, configText, 'ascii'
+
+generateConfigText = (configText) ->
+  hoganTemplateText = fs.readFileSync path.join(__dirname, 'lib', 'config-template.hogan'), 'ascii'
+  compiledHogan = hogan.compile(hoganTemplateText)
+  context =
+    configJSON: JSON.stringify(configText, null, 2)
+  compiledHogan.render(context).replace(/&quot;/g,"\"")
 
 determineLanguagePrepend = (config) ->
   appJsInPath = path.join __dirname, 'lib', 'app.js'

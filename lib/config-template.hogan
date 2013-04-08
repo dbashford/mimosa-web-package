@@ -1,0 +1,6 @@
+var path = require('path');
+var config = {{configJSON}}
+
+config.watch.compiledDir = path.join(__dirname, config.watch.compiledDir);
+
+module.exports = config;
