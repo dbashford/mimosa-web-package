@@ -87,11 +87,12 @@ writeConfig = (config) ->
 
   if configClone.server
     writeConfig.server = configClone.server
-    writeConfig.server.path = path.relative config.root, writeConfig.server.path
-    writeConfig.server.views.path = path.relative config.root, writeConfig.server.views.path
-  writeConfig.watch.sourceDir = path.relative config.root, writeConfig.watch.sourceDir
-  writeConfig.watch.compiledDir = path.relative config.root, writeConfig.watch.compiledDir
-  writeConfig.watch.compiledJavascriptDir = path.relative config.root, writeConfig.watch.compiledJavascriptDir
+    writeConfig.server.path = path.relative(config.root, writeConfig.server.path).split(path.sep)
+    writeConfig.server.views.path = path.relative(config.root, writeConfig.server.views.path).split(path.sep)
+  writeConfig.watch.sourceDir = path.relative(config.root, writeConfig.watch.sourceDir).split(path.sep)
+  writeConfig.watch.compiledDir = path.relative(config.root, writeConfig.watch.compiledDir).split(path.sep)
+  writeConfig.watch.javascriptDir = path.relative(config.root, writeConfig.watch.javascriptDir).split(path.sep)
+  writeConfig.watch.compiledJavascriptDir = path.relative(config.root, writeConfig.watch.compiledJavascriptDir).split(path.sep)
   configOutPath = path.join config.webPackage.outPath, "#{config.webPackage.configName}.js"
   logger.debug "Writing mimosa-config to [[ #{configOutPath} ]]"
   configText = generateConfigText(writeConfig)
