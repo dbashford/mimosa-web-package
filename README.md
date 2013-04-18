@@ -26,6 +26,8 @@ What you get as a result is an application that runs without Mimosa's aid by sim
 
 If `tar` isn't available as a command line utility on your system, no tar file will be created.
 
+If your application is using Mimosa's default server rather than a server of your own, web-package will not write an `app.js` and will not execute `npm install`.
+
 ## Default Config
 
 ```

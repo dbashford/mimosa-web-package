@@ -34,11 +34,18 @@ _package = (config, options, next) ->
   copyDirSyncRecursive config.root, config.webPackage.outPath, config.webPackage.exclude
 
   # write config to output after modifying the config
-  writeConfig(config)
+  __writeConfig(config)
 
-  # write app.js to output, add language if need be
-  determineLanguagePrepend(config)
+  if config.server?.defaultServer?.enabled is true
+    logger.info "Default server being used, not writing app.js or running npm install"
+    logger.info "Completed web-package"
+    next()
+  else
+    # write app.js to output, run npm inside target directory
+    __writeApplicationStarter config
+    __runNPMInstall config, next
 
+__runNPMInstall = (config, next) ->
   # run npm in dist folder to generate node modules pre-package
   currentDir = process.cwd()
   process.chdir config.webPackage.outPath
@@ -77,7 +84,7 @@ _package = (config, options, next) ->
 
         done()
 
-writeConfig = (config) ->
+__writeConfig = (config) ->
   configClone = _.clone(config, true)
   writeConfig =
     watch: configClone.watch
@@ -95,17 +102,17 @@ writeConfig = (config) ->
   writeConfig.watch.compiledJavascriptDir = path.relative(config.root, writeConfig.watch.compiledJavascriptDir).split(path.sep)
   configOutPath = path.join config.webPackage.outPath, "#{config.webPackage.configName}.js"
   logger.debug "Writing mimosa-config to [[ #{configOutPath} ]]"
-  configText = generateConfigText(writeConfig)
+  configText = __generateConfigText(writeConfig)
   fs.writeFileSync configOutPath, configText, 'ascii'
 
-generateConfigText = (configText) ->
+__generateConfigText = (configText) ->
   hoganTemplateText = fs.readFileSync path.join(__dirname, 'lib', 'config-template.hogan'), 'ascii'
   compiledHogan = hogan.compile(hoganTemplateText)
   context =
     configJSON: JSON.stringify(configText, null, 2)
   compiledHogan.render(context).replace(/&quot;/g,"\"")
 
-determineLanguagePrepend = (config) ->
+__writeApplicationStarter = (config) ->
   appJsInPath = path.join __dirname, 'lib', 'app.js'
   appJsText = fs.readFileSync appJsInPath, 'ascii'
   if config.server?.path?
