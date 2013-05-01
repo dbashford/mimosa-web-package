@@ -36,9 +36,11 @@ webPackage:
   configName: "config"
   outPath: "dist"
   exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+  appjs: "app.js"
 ```
 
 * `archiveName`: a string, the name of the output `.tar.gz` file.  Ex: app.tar.gz. If the default is changed away from `app`, web-package will use the changed config setting.  If the default is left alone, web-package will check the for a `name` property in the package.json, and if it exists, it will be used. If the default is left as `app`, and there is no package.json.name property, the default is used.
 * `configName`: a string, the name of output configuration file. The relevant portions of the `mimosa-config` are written to the `outPath` directory as `configName + '.json'`
 * `outPath`: a string, the folder where mimosa-web-package will place your packaged app.  Can be either relative to the root of your project or absolute.
 * `exclude`: an array, files, relative to the root of the project, to not include in the package.  If it isn't listed in this array, it will be included in the package.
+* `appjs`: name of the output app.js file which bootstraps the application, when set to null, web-package will not output a bootstrap file

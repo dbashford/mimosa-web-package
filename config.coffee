@@ -8,6 +8,7 @@ exports.defaults = ->
     outPath: "dist"
     configName: "config"
     exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+    appjs:"app.js"
 
 exports.placeholder = ->
   """
@@ -33,6 +34,8 @@ exports.placeholder = ->
       as part of a package.  By default the watch.sourceDir is added to this list during processing.
       ###
       # exclude:["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+      # appjs: "app.js"           # name of the output app.js file which bootstraps the application,
+                                  # when set to null, web-package will not output a bootstrap file
   """
 
 exports.validate = (config, validators) ->
@@ -58,5 +61,7 @@ exports.validate = (config, validators) ->
           break
       config.webPackage.exclude = fullPathExcludes
       config.webPackage.exclude.push config.webPackage.outPath
+
+    validators.ifExistsIsString(errors, "webPackage.appjs", config.webPackage.appjs)
 
   errors

@@ -42,7 +42,8 @@ _package = (config, options, next) ->
     next()
   else
     # write app.js to output, run npm inside target directory
-    __writeApplicationStarter config
+    if config.webPackage.appjs
+      __writeApplicationStarter config
     __runNPMInstall config, next
 
 __runNPMInstall = (config, next) ->
@@ -140,7 +141,7 @@ __writeApplicationStarter = (config) ->
 
   appJsText = appJsText.replace "NAME", config.webPackage.configName
 
-  appJsOutPath = path.join config.webPackage.outPath, 'app.js'
+  appJsOutPath = path.join config.webPackage.outPath, config.webPackage.appjs
   logger.debug "Writing app.js to [[ #{appJsOutPath} ]]"
   fs.writeFileSync appJsOutPath, appJsText, 'ascii'
 
