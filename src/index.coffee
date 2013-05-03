@@ -107,14 +107,14 @@ __writeConfig = (config) ->
   fs.writeFileSync configOutPath, configText, 'ascii'
 
 __generateConfigText = (configText) ->
-  hoganTemplateText = fs.readFileSync path.join(__dirname, 'lib', 'config-template.hogan'), 'ascii'
+  hoganTemplateText = fs.readFileSync path.join(__dirname, 'resources', 'config-template.hogan'), 'ascii'
   compiledHogan = hogan.compile(hoganTemplateText)
   context =
     configJSON: JSON.stringify(configText, null, 2)
   compiledHogan.render(context).replace(/&quot;/g,"\"")
 
 __writeApplicationStarter = (config) ->
-  appJsInPath = path.join __dirname, 'lib', 'app.js'
+  appJsInPath = path.join __dirname, 'resources', 'app.js'
   appJsText = fs.readFileSync appJsInPath, 'ascii'
   if config.server?.path?
     serverExtension = path.extname(config.server.path).substring(1)
