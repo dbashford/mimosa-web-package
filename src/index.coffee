@@ -11,6 +11,7 @@ hogan = require 'hogan.js'
 
 moduleConfig = require './config'
 
+isReallyWindows = true
 langs =
   coffee:"coffee-script"
   js:false
@@ -20,6 +21,10 @@ langs =
 registration = (config, register) ->
   if config.isPackage
     register ['postBuild'], 'package',  _package
+
+    if process.platform is "win32"
+      exec 'ulimit', (error, stdout, stderr) =>
+        if not error then isReallyWindows = false
 
 _package = (config, options, next) ->
   logger.info "Beginning web-package"
@@ -76,7 +81,12 @@ __runNPMInstall = (config, next) ->
 
       tarballName = "#{tarballName}.tar.gz"
       outputTarFile = path.join config.root, tarballName
+      if process.platform is "win32" and not isReallyWindows
+        outputTarFile = outputTarFile.replace(':',"")
+        outputTarFile = require('slash')(outputTarFile)
+
       tarCommand = "tar -czf #{outputTarFile} ."
+      logger.debug "tar command: #{tarCommand}"
       exec tarCommand, (err, sout, serr) =>
         if err
           logger.info "Failed to 'tar' file using command: #{tarCommand}"

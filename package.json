@@ -1,6 +1,6 @@
 {
   "name": "mimosa-web-package",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "homepage": "https://github.com/dbashford/mimosa-web-package",
   "author": "David Bashford",
   "description": "Web App Packaging Module for Mimosa",
@@ -25,7 +25,8 @@
     "logmimosa": "0.5.0",
     "rimraf": "2.1.4",
     "lodash": "1.2.1",
-    "hogan.js" : "2.0.0"
+    "hogan.js" : "2.0.0",
+    "slash": "0.1.0"
   },
   "license": "MIT",
   "engines": {
