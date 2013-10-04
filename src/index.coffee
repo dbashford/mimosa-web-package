@@ -23,7 +23,7 @@ registration = (config, register) ->
     register ['postBuild'], 'package',  _package
 
     if process.platform is "win32"
-      exec 'ulimit', (error, stdout, stderr) =>
+      exec 'uname', (error, stdout, stderr) =>
         if not error then isReallyWindows = false
 
 _package = (config, options, next) ->
@@ -81,11 +81,14 @@ __runNPMInstall = (config, next) ->
 
       tarballName = "#{tarballName}.tar.gz"
       outputTarFile = path.join config.root, tarballName
-      if process.platform is "win32" and not isReallyWindows
-        outputTarFile = outputTarFile.replace(':',"")
-        outputTarFile = require('slash')(outputTarFile)
-
       tarCommand = "tar -czf #{outputTarFile} ."
+
+      if process.platform is "win32" and not isReallyWindows
+        # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
+        altOutputTarFile = outputTarFile.replace(/(.+):/, "/$1")
+        altOutputTarFile = require('slash')(altOutputTarFile)
+        tarCommand = "tar -czf #{altOutputTarFile} ."
+
       logger.debug "tar command: #{tarCommand}"
       exec tarCommand, (err, sout, serr) =>
         if err
