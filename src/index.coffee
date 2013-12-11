@@ -110,7 +110,7 @@ __writeConfig = (config) ->
     writeConfig.server = configClone.server
     if writeConfig.server.path
       writeConfig.server.path = path.relative(config.root, writeConfig.server.path).split(path.sep)
-    if writeConfig.server.views.path
+    if writeConfig.server.views?.path
       writeConfig.server.views.path = path.relative(config.root, writeConfig.server.views.path).split(path.sep)
 
   writeConfig.watch.sourceDir = path.relative(config.root, writeConfig.watch.sourceDir).split(path.sep)
