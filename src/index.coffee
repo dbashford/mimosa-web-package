@@ -155,7 +155,20 @@ __writeApplicationStarter = (config) ->
     prepend = "require('#{prependLang}')\n";
     appJsText = prepend + appJsText
 
-  appJsText = appJsText.replace "NAME", config.webPackage.configName
+  rootPathFromAppjs = ''
+  serverRelPath = config.server.path.split(config.root)[1].substr(1)
+
+  if path.dirname(config.webPackage.appjs) isnt '.'
+    for level in path.dirname(config.webPackage.appjs).split(path.sep)
+      do ->
+        rootPathFromAppjs += '..' + path.sep
+
+  if rootPathFromAppjs == ''
+    appJsText = appJsText.replace "CONFIG_PATH", "./#{config.webPackage.configName}"
+    appJsText = appJsText.replace "SERVER_PATH", "./#{serverRelPath}"
+  else
+    appJsText = appJsText.replace "CONFIG_PATH", path.join(rootPathFromAppjs, config.webPackage.configName)
+    appJsText = appJsText.replace "SERVER_PATH", path.join(rootPathFromAppjs, serverRelPath)
 
   appJsOutPath = path.join config.webPackage.outPath, config.webPackage.appjs
   logger.debug "Writing app.js to [[ #{appJsOutPath} ]]"
