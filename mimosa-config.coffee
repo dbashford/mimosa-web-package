@@ -1,5 +1,8 @@
 exports.config =
-  modules: ["jshint"]
+  modules: ["jshint", "copy", "coffeescript"]
+  coffeescript:
+    options:
+      sourceMap: false
   watch:
     sourceDir: "src"
     compiledDir: "lib"
@@ -7,8 +10,5 @@ exports.config =
   jshint:
     rules:
       node: true
-  compilers:
-    extensionOverrides:
-      hogan:null
   copy:
     extensions:["js","hogan"]

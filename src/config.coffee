@@ -28,7 +28,7 @@ exports.placeholder = ->
       # outPath:"dist"            # Output path for assets to package, should be relative to the
                                   # root of the project (location of mimosa-config) or be absolute
       # configName:"config"       # the name of the config file, will be placed in outPath and have
-                                  # a .json extension
+                                  # a .json extension. it is also acceptable to define a subdirectory
       ###
       Exclude is a list of files/folders relative to the root of the app to not copy to the outPath
       as part of a package.  By default the watch.sourceDir is added to this list during processing.
