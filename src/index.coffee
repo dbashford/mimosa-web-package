@@ -5,12 +5,12 @@ fs = require 'fs'
 {exec} = require 'child_process'
 
 rimraf = require 'rimraf'
-logger = require 'logmimosa'
 _ = require 'lodash'
 hogan = require 'hogan.js'
 
 moduleConfig = require './config'
 
+logger = null
 isReallyWindows = true
 langs =
   coffee:"coffee-script"
@@ -20,6 +20,8 @@ langs =
 
 registration = (config, register) ->
   if config.isPackage
+    logger = config.log
+
     register ['postBuild'], 'package',  _package
 
     if process.platform is "win32"
