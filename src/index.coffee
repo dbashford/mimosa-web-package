@@ -94,7 +94,7 @@ __runNPMInstall = (config, next) ->
       logger.debug "tar command: #{tarCommand}"
       exec tarCommand, (err, sout, serr) =>
         if err
-          logger.info "Failed to 'tar' file using command: #{tarCommand}"
+          logger.info "Failed to 'tar' file using command [[ #{tarCommand} ]]"
         else
           fs.renameSync outputTarFile, path.join config.webPackage.outPath, tarballName
 
