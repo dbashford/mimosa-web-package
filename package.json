@@ -1,6 +1,6 @@
 {
   "name": "mimosa-web-package",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "https://github.com/dbashford/mimosa-web-package",
   "author": "David Bashford",
   "description": "Web App Packaging Module for Mimosa",
