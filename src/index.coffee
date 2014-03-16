@@ -154,7 +154,11 @@ __writeApplicationStarter = (config) ->
       logger.info "Unable to determine language of server file, you might need to address the app.js file to add a require statement for your language of choice"
 
   if prependLang?
-    prepend = "require('#{prependLang}')\n";
+    coffeeMatch = /.*?coffee-script/.test prependLang
+    if coffeeMatch
+      prepend = "require('#{prependLang}/register')\n";
+    else
+      prepend = "require('#{prependLang}')\n";
     appJsText = prepend + appJsText
 
   rootPathFromAppjs = ''
