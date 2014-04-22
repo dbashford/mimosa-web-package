@@ -58,7 +58,7 @@ __runNPMInstall = (config, next) ->
   currentDir = process.cwd()
   process.chdir config.webPackage.outPath
   logger.debug "Running NPM inside [[ #{config.webPackage.outPath} ]]"
-  exec "npm install", (err, sout, serr) =>
+  exec "npm install --production", (err, sout, serr) =>
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
 

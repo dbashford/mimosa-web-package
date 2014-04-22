@@ -19,7 +19,7 @@ If you are running `mimosa build` with the `--package` flag, mimosa-web-package 
 * Re-write the package.json to not include any mimosa packages in the `package.json` `depedencies` array.
 * Write the parts of the fully-resolved and blown out `mimosa-config` that pertain to the server to the `webPackage.outPath` as `config.js`.  Will set some config values, like live reload to production level settings.  Will also turn normally absolute `mimosa-config` paths relative.  To accommodate app hosting solutions like Heroku, `config.js` also re-figures the location of public assets.
 * Write a simple `app.js` file to `webPackage.outPath`. `app.js` exists to be a starting point for your app when Mimosa is not available to invoke your server. It simply reads the config, and calls your `server.startServer` method passing the config.
-* runs NPM install from inside the `webpackage.outPath`
+* runs NPM install from inside the `webpackage.outPath`. The `--production` flag is used to avoid installing any packages in your package.json `devDependencies`. If your production app actually depends on any packages listed there, they should really be in `dependencies`.
 * gzips the entire folder as a sep .gz file
 
 What you get as a result is an application that runs without Mimosa's aid by simply executing `node app.js`, as well as an archive file (.tar.gz) of the codebase.
