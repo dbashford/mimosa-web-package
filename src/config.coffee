@@ -7,7 +7,7 @@ exports.defaults = ->
     archiveName: "app"
     outPath: "dist"
     configName: "config"
-    exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+    exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore",".travis.yml"]
     appjs:"app.js"
 
 exports.placeholder = ->
@@ -33,7 +33,7 @@ exports.placeholder = ->
       Exclude is a list of files/folders relative to the root of the app to not copy to the outPath
       as part of a package.  By default the watch.sourceDir is added to this list during processing.
       ###
-      exclude:["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+      exclude:["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore",".travis.yml"]
       appjs: "app.js"           # name of the output app.js file which bootstraps the application,
                                 # when set to null, web-package will not output a bootstrap file
 
