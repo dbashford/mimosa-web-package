@@ -138,7 +138,7 @@ __generateConfigText = (configText) ->
   compiledHogan = hogan.compile(hoganTemplateText)
   context =
     configJSON: JSON.stringify(configText, null, 2)
-  compiledHogan.render(context).replace(/&quot;/g,"\"")
+  compiledHogan.render(context).replace(/&quot;/g,"\"").replace(/&#39;/g, "'")
 
 __writeApplicationStarter = (config) ->
   appJsInPath = path.join __dirname, 'resources', 'app.js'
