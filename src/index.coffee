@@ -102,11 +102,20 @@ __runNPMInstall = (config, next) ->
 
 __writeConfig = (config) ->
   configClone = _.clone(config, true)
-  writeConfig =
-    watch: configClone.watch
-    liveReload:
-      enabled:false
-    isOptimize: configClone.isOptimize
+
+  if config.webPackage.useEntireConfig
+    writeConfig = configClone
+    if writeConfig.liveReload
+      writeConfig.liveReload.enabled = false
+    ["extensions", "installedModules", "logger", "timer", "helpers", "log"].forEach (prop) ->
+      delete writeConfig[prop] if writeConfig[prop]
+
+  else
+    writeConfig =
+      watch: configClone.watch
+      liveReload:
+        enabled:false
+      isOptimize: configClone.isOptimize
 
   if configClone.server
     writeConfig.server = configClone.server
