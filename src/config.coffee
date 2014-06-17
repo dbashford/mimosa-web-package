@@ -72,7 +72,7 @@ exports.validate = (config, validators) ->
 
     validators.ifExistsIsString(errors, "webPackage.appjs", config.webPackage.appjs)
 
-    if config.server? or config.server.path?
+    if not config.server or not config.server.path
       config.webPackage.appjs = undefined
 
   errors
