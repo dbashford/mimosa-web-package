@@ -4,9 +4,7 @@ path = require 'path'
 fs = require 'fs'
 {exec} = require 'child_process'
 
-rimraf = require 'rimraf'
 _ = require 'lodash'
-hogan = require 'hogan.js'
 
 moduleConfig = require './config'
 
@@ -33,6 +31,7 @@ _package = (config, options, next) ->
 
   # delete directory if it exists
   if fs.existsSync config.webPackage.outPath
+    rimraf = require 'rimraf'
     logger.debug "Deleting #{config.webPackage.outPath} ]]"
     rimraf.sync config.webPackage.outPath
 
@@ -134,6 +133,7 @@ __writeConfig = (config) ->
   fs.writeFileSync configOutPath, configText, 'ascii'
 
 __generateConfigText = (configText) ->
+  hogan = require 'hogan.js'
   hoganTemplateText = fs.readFileSync path.join(__dirname, 'resources', 'config-template.hogan'), 'ascii'
   compiledHogan = hogan.compile(hoganTemplateText)
   context =
