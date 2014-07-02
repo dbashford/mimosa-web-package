@@ -165,7 +165,14 @@ __writeApplicationStarter = (config) ->
   if prependLang?
     coffeeMatch = /.*?coffee-script/.test prependLang
     if coffeeMatch
-      prepend = "require('#{prependLang}/register')\n";
+      prepend = """
+      // with coffeescript 1.7, need to bring in register to have coffeescript compiled on the fly
+      var trans = require('#{prependLang}');
+      if (trans.register) {
+        trans.register();
+      }
+
+      """
     else
       prepend = "require('#{prependLang}')\n";
     appJsText = prepend + appJsText
