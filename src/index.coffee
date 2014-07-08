@@ -26,6 +26,58 @@ registration = (config, register) ->
       exec 'uname', (error, stdout, stderr) =>
         if not error then isReallyWindows = false
 
+__tarball = (config, done) ->
+  tarballName = config.webPackage.archiveName
+  # if didn't change default, look for package.json name
+  if tarballName is moduleConfig.defaults().webPackage.archiveName
+    try
+      pack = require(path.join config.root, 'package.json')
+      tarballName = pack.name if pack.name?
+    catch err
+      logger.debug "No package.json"
+
+  unless /\.tar/.test(tarballName)
+    tarballName = "#{tarballName}.tar.gz"
+
+  outputTarFile = path.join config.root, tarballName
+  tarCommand = "tar -czf #{outputTarFile} ."
+
+  if process.platform is "win32" and not isReallyWindows
+    # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
+    altOutputTarFile = outputTarFile.replace(/(.+):/, "/$1")
+    altOutputTarFile = require('slash')(altOutputTarFile)
+    tarCommand = "tar -czf #{altOutputTarFile} ."
+
+  logger.debug "tar command: #{tarCommand}"
+  exec tarCommand, (err, sout, serr) =>
+    if err
+      logger.info "Failed to 'tar' file using command [[ #{tarCommand} ]]"
+    else
+      fs.renameSync outputTarFile, path.join config.webPackage.outPath, tarballName
+
+    done()
+
+__zip = (config, done) ->
+  zipName = config.webPackage.archiveName
+  outputZipFile = path.join config.root, zipName
+  zipCommand = "zip -r #{outputZipFile} ."
+
+  if process.platform is "win32" and not isReallyWindows
+    # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
+    altOutputZipFile = outputZipFile.replace(/(.+):/, "/$1")
+    altOutputZipFile = require('slash')(altOutputZipFile)
+    zipCommand = "zip -r #{altOutputZipFile} ."
+
+  logger.debug "zip command: #{zipCommand}"
+  exec zipCommand, (err, sout, serr) =>
+    if err
+      logger.info "Failed to 'zip' file using command [[ #{zipCommand} ]]"
+    else
+      fs.renameSync outputZipFile, path.join config.webPackage.outPath, zipName
+
+    done()
+
+
 _package = (config, options, next) ->
   logger.info "Beginning web-package"
 
@@ -71,32 +123,13 @@ __runNPMInstall = (config, next) ->
       done()
     else
       logger.debug "Zip contents of [[ #{config.webPackage.outPath} ]]"
-      tarballName = config.webPackage.archiveName
-      # if didn't change default, look for package.json name
-      if tarballName is moduleConfig.defaults().webPackage.archiveName
-        try
-          pack = require(path.join config.root, 'package.json')
-          tarballName = pack.name if pack.name?
-        catch err
-          logger.debug "No package.json"
 
-      tarballName = "#{tarballName}.tar.gz"
-      outputTarFile = path.join config.root, tarballName
-      tarCommand = "tar -czf #{outputTarFile} ."
-
-      if process.platform is "win32" and not isReallyWindows
-        # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
-        altOutputTarFile = outputTarFile.replace(/(.+):/, "/$1")
-        altOutputTarFile = require('slash')(altOutputTarFile)
-        tarCommand = "tar -czf #{altOutputTarFile} ."
-
-      logger.debug "tar command: #{tarCommand}"
-      exec tarCommand, (err, sout, serr) =>
-        if err
-          logger.info "Failed to 'tar' file using command [[ #{tarCommand} ]]"
-        else
-          fs.renameSync outputTarFile, path.join config.webPackage.outPath, tarballName
-
+      if config.webPackage.archiveName
+        archive = __tarball
+        if /\.zip$/.test(config.webPackage.archiveName)
+          archive = __zip
+        archive config, done
+      else
         done()
 
 __writeConfig = (config) ->

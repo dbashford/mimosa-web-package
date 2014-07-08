@@ -20,12 +20,16 @@ exports.placeholder = ->
     applications
     ###
     webPackage:                 # Configration for packaging of web applications
-      archiveName: "app"        # If the default is changed away from `app`, the changed config
-                                # setting will be used.  If the default is left alone,
-                                # web-package will check the for a `name` property in the
-                                # package.json, and if it exists, it will be used.   If the
-                                # default is left as `app`, and there is no package.json.name
-                                # property, the default is used.
+      archiveName: "app"        # a string, the name of the output .tar.gz/.zip file. No
+                                # archive will be created if archiveName is set to null.
+                                # A .zip will only be created if the archiveName ends in 
+                                # .zip.  Otherwise a tar file is assumed.  If the default is
+                                # changed away from app, web-package will use the changed config
+                                # setting.  If the default is left alone (only .tar),
+                                # web-package will check the for a name property in the
+                                # package.json, and if it exists, it will be used. If the default
+                                # is left as app, and there is no package.json.name property,
+                                # the default is used.
       outPath:"dist"            # Output path for assets to package, should be relative to the
                                 # root of the project (location of mimosa-config) or be absolute
       configName:"config"       # the name of the config file, will be placed in outPath and have
