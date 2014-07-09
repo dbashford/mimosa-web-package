@@ -36,7 +36,7 @@ webPackage:
   configName: "config"
   useEntireConfig: false
   outPath: "dist"
-  exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore","mimosa-config-documented.coffee",".mimosa"]
+  exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore","mimosa-config-documented.coffee",".mimosa","bower.json"]
   appjs: "app.js"
 ```
 

@@ -58,10 +58,27 @@ __tarball = (config, done) ->
     done()
 
 __zip = (config, done) ->
-  zipName = config.webPackage.archiveName
-  outputZipFile = path.join config.root, zipName
-  zipCommand = "zip -r #{outputZipFile} ."
+  AdmZip = require('adm-zip')
+  zip = new AdmZip()
 
+  fs.readdirSync(config.webPackage.outPath).map (p) ->
+    origPath: p
+    fullPath: path.join config.webPackage.outPath, p
+  .forEach (p) ->
+    stats = fs.statSync p.fullPath, p.origPath
+    if stats.isFile()
+      zip.addLocalFile p.fullPath
+    if stats.isDirectory()
+      zip.addLocalFolder p.fullPath, p.origPath
+
+  zipName = config.webPackage.archiveName
+  outputZipFile = path.join config.webPackage.outPath, zipName
+  zip.writeZip outputZipFile
+
+  done()
+
+  ###
+  zipCommand = "zip -r #{outputZipFile} ."
   if process.platform is "win32" and not isReallyWindows
     # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
     altOutputZipFile = outputZipFile.replace(/(.+):/, "/$1")
@@ -76,6 +93,7 @@ __zip = (config, done) ->
       fs.renameSync outputZipFile, path.join config.webPackage.outPath, zipName
 
     done()
+  ###
 
 
 _package = (config, options, next) ->
