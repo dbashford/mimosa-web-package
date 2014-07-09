@@ -36,11 +36,11 @@ webPackage:
   configName: "config"
   useEntireConfig: false
   outPath: "dist"
-  exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore"]
+  exclude: ["README.md","node_modules","mimosa-config.coffee","mimosa-config.js","assets",".git",".gitignore","mimosa-config-documented.coffee",".mimosa"]
   appjs: "app.js"
 ```
 
-* `archiveName`: a string, the name of the output `.tar.gz`/`.zip` file. No archive will be created if `archiveName` is set to `null`. A `.zip` will only be created if the `archiveName` ends in `.zip`.  Otherwise a tar file is assumed. The following rules only apply to `.tar`s. If the default is changed away from `app`, web-package will use the changed config setting. If the default is left alone, web-package will check the for a `name` property in the `package.json`, and if it exists, it will be used. If the default is left as `app`, and there is no `package.json.name` property, the default is used. 
+* `archiveName`: a string, the name of the output `.tar.gz`/`.zip` file. No archive will be created if `archiveName` is set to `null`. A `.zip` will only be created if the `archiveName` ends in `.zip`.  Otherwise a tar file is assumed. The following rules only apply to `.tar`s. If the default is changed away from `app`, web-package will use the changed config setting. If the default is left alone, web-package will check the for a `name` property in the `package.json`, and if it exists, it will be used. If the default is left as `app`, and there is no `package.json.name` property, the default is used.
 * `configName`: a string, the name of output configuration file without extension; it is also acceptable to define a subdirectory, although the subdirectory must exist and the path separator character ('/' or '\') must be at the beginning (e.g. "config/settings"). The relevant portions of the `mimosa-config` are written to the `outPath` directory as `configName + '.js'`
 * `useEntireConfig`: a boolean, this module pulls out specific pieces of the mimosa-config that apply to what you may need with a packaged application. For instance, it does not include a coffeescript config, or a jshint config. If you want it to include the entire resolved mimosa-config flip this flag to true.
 * `outPath`: a string, the folder where mimosa-web-package will place your packaged app.  Can be either relative to the root of your project or absolute.
