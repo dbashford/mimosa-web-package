@@ -58,43 +58,26 @@ __tarball = (config, done) ->
     done()
 
 __zip = (config, done) ->
-  AdmZip = require('adm-zip')
-  zip = new AdmZip()
+  JSZip = require('jszip')
+  wrench = require('wrench')
 
-  fs.readdirSync(config.webPackage.outPath).map (p) ->
+  zip = new JSZip()
+
+  wrench.readdirSyncRecursive(config.webPackage.outPath).map (p) ->
     origPath: p
     fullPath: path.join config.webPackage.outPath, p
   .forEach (p) ->
     stats = fs.statSync p.fullPath, p.origPath
     if stats.isFile()
-      zip.addLocalFile p.fullPath
-    if stats.isDirectory()
-      zip.addLocalFolder p.fullPath, p.origPath
+      # path separator should be / for the zip to work on both Windows and Linux
+      zip.file p.origPath.replace(/\\/g, '\/'), fs.readFileSync(p.fullPath)
 
   zipName = config.webPackage.archiveName
   outputZipFile = path.join config.webPackage.outPath, zipName
-  zip.writeZip outputZipFile
+  content = zip.generate { type: 'nodebuffer', compression: 'DEFLATE' }
+  fs.writeFileSync outputZipFile, content
 
   done()
-
-  ###
-  zipCommand = "zip -r #{outputZipFile} ."
-  if process.platform is "win32" and not isReallyWindows
-    # Probably running in Git Bash. Paths must be /c/path/to/file instead of c:\path\to\file.
-    altOutputZipFile = outputZipFile.replace(/(.+):/, "/$1")
-    altOutputZipFile = require('slash')(altOutputZipFile)
-    zipCommand = "zip -r #{altOutputZipFile} ."
-
-  logger.debug "zip command: #{zipCommand}"
-  exec zipCommand, (err, sout, serr) =>
-    if err
-      logger.info "Failed to 'zip' file using command [[ #{zipCommand} ]]"
-    else
-      fs.renameSync outputZipFile, path.join config.webPackage.outPath, zipName
-
-    done()
-  ###
-
 
 _package = (config, options, next) ->
   logger.info "Beginning web-package"
